@@ -10,19 +10,45 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
   <div class="page-shell">
     <header class="hero">
-      <div class="hero-badge">Internal Tool</div>
-      <h1>Podium Pricing Calculator</h1>
-      <p>Fast monthly pricing quotes for parent calls.</p>
+      <div class="hero-topline">
+        <span class="hero-badge">Internal Tool</span>
+        <span class="hero-badge ghost">Podium Pricing</span>
+      </div>
+
+      <h1>
+        Premium Pricing
+        <span>Calculator</span>
+      </h1>
+
+      <p>
+        Quick parent quotes, custom 1-on-1 pricing, and group session profit analysis
+        in one sleek Podium dashboard.
+      </p>
+
+      <div class="tab-shell">
+        <button class="tab-btn active" data-tab="quick">Quick Quote</button>
+        <button class="tab-btn" data-tab="custom">Custom Mode</button>
+        <button class="tab-btn" data-tab="group">Group Mode</button>
+      </div>
     </header>
 
-    <main class="main-grid">
-      <section class="panel">
+    <main class="main-stack">
+      <!-- QUICK QUOTE -->
+      <section class="panel tab-panel active" id="tab-quick">
         <div class="section-heading">
           <div>
+            <span class="eyebrow">Fastest mode</span>
             <h2>Quick Quote</h2>
-            <p>Best for live calls. Compare preset profit options instantly.</p>
+            <p>Best for live calls. Compare preset profit levels instantly.</p>
+          </div>
+          <div class="mini-highlight">
+            <span class="mini-label">Uses preset profit targets</span>
           </div>
         </div>
 
@@ -54,11 +80,16 @@
         </div>
       </section>
 
-      <section class="panel">
+      <!-- CUSTOM -->
+      <section class="panel tab-panel" id="tab-custom">
         <div class="section-heading">
           <div>
+            <span class="eyebrow">Flexible mode</span>
             <h2>Custom Calculator</h2>
-            <p>Build a custom quote with your exact profit target.</p>
+            <p>Set your exact profit per person and generate a live monthly quote.</p>
+          </div>
+          <div class="mini-highlight blue">
+            <span class="mini-label">1-on-1 / custom pricing builder</span>
           </div>
         </div>
 
@@ -112,35 +143,108 @@
             <div class="metric-value" id="tp">—</div>
           </div>
 
-          <div class="metric-card featured">
+          <div class="metric-card featured blue">
             <div class="metric-label">Parent Monthly Price</div>
             <div class="metric-value" id="pm">—</div>
           </div>
 
-          <div class="metric-card featured secondary">
+          <div class="metric-card featured yellow">
             <div class="metric-label">Parent Hourly Rate</div>
             <div class="metric-value" id="hr">—</div>
           </div>
         </div>
+
+        <div class="breakdown-panel">
+          <h3>How pricing is calculated</h3>
+          <div class="formula-list">
+            <div class="formula-item">1. Monthly hours = weekly hours × 4</div>
+            <div class="formula-item">2. Tutor monthly cost = monthly hours × tutor pay per hour</div>
+            <div class="formula-item">3. Total partner profit = profit per person × 2</div>
+            <div class="formula-item">4. Parent monthly price = tutor monthly cost + total partner profit</div>
+            <div class="formula-item">5. Parent hourly rate = parent monthly price ÷ monthly hours</div>
+          </div>
+          <div class="live-breakdown" id="formula"></div>
+        </div>
       </section>
 
-      <section class="panel">
+      <!-- GROUP -->
+      <section class="panel tab-panel" id="tab-group">
         <div class="section-heading">
           <div>
-            <h2>How pricing is calculated</h2>
-            <p>Simple monthly pricing logic for Rahat and Abir.</p>
+            <span class="eyebrow">Profit analysis</span>
+            <h2>Group Mode</h2>
+            <p>See revenue, tutor cost, total profit, and what Abir and Rahat each make.</p>
+          </div>
+          <div class="mini-highlight yellow">
+            <span class="mini-label">Group session profit view</span>
           </div>
         </div>
 
-        <div class="formula-list">
-          <div class="formula-item">1. Monthly hours = weekly hours × 4</div>
-          <div class="formula-item">2. Tutor monthly cost = monthly hours × tutor pay per hour</div>
-          <div class="formula-item">3. Total partner profit = profit per person × 2</div>
-          <div class="formula-item">4. Parent monthly price = tutor monthly cost + total partner profit</div>
-          <div class="formula-item">5. Parent hourly rate = parent monthly price ÷ monthly hours</div>
+        <div class="input-grid">
+          <label class="field">
+            <span>Number of Students</span>
+            <input id="group-students" type="number" min="0" step="1" value="4" />
+          </label>
+
+          <label class="field">
+            <span>Monthly Charge per Student</span>
+            <input id="group-charge" type="number" min="0" step="0.01" value="450" />
+          </label>
+
+          <label class="field">
+            <span>Tutor Pay per Hour</span>
+            <input id="group-pay" type="number" min="0" step="0.01" value="25" />
+          </label>
+
+          <label class="field">
+            <span>Hours per Week</span>
+            <input id="group-hours" type="number" min="0" step="0.5" value="4" />
+          </label>
         </div>
 
-        <div class="live-breakdown" id="formula"></div>
+        <div class="results-grid">
+          <div class="metric-card">
+            <div class="metric-label">Monthly Hours</div>
+            <div class="metric-value" id="g-mh">—</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Total Revenue</div>
+            <div class="metric-value" id="g-revenue">—</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Tutor Monthly Cost</div>
+            <div class="metric-value" id="g-cost">—</div>
+          </div>
+
+          <div class="metric-card featured blue" id="g-profit-card">
+            <div class="metric-label">Total Profit</div>
+            <div class="metric-value" id="g-profit">—</div>
+          </div>
+
+          <div class="metric-card featured yellow" id="g-abir-card">
+            <div class="metric-label">Abir Profit</div>
+            <div class="metric-value" id="g-abir">—</div>
+          </div>
+
+          <div class="metric-card featured yellow" id="g-rahat-card">
+            <div class="metric-label">Rahat Profit</div>
+            <div class="metric-value" id="g-rahat">—</div>
+          </div>
+        </div>
+
+        <div class="breakdown-panel">
+          <h3>How group mode is calculated</h3>
+          <div class="formula-list">
+            <div class="formula-item">1. Monthly hours = hours per week × 4</div>
+            <div class="formula-item">2. Total revenue = monthly charge per student × number of students</div>
+            <div class="formula-item">3. Tutor monthly cost = monthly hours × tutor pay per hour</div>
+            <div class="formula-item">4. Total profit = total revenue − tutor monthly cost</div>
+            <div class="formula-item">5. Profit each = total profit ÷ 2</div>
+          </div>
+          <div class="live-breakdown" id="group-formula"></div>
+        </div>
       </section>
     </main>
 

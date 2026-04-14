@@ -1,6 +1,32 @@
-const presetOptions = [80, 90, 100, 110, 120];
+const PRESET_OPTIONS = [80, 90, 100, 110, 120];
 const PARTNER_COUNT = 2;
 const WEEKS_PER_MONTH = 4;
+
+function isValidNumber(value) {
+  return Number.isFinite(value) && value >= 0;
+}
+
+function formatCurrency(value) {
+  if (!Number.isFinite(value)) return "—";
+  const isWhole = Math.abs(value - Math.round(value)) < 0.0001;
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: isWhole ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
+function formatHourlyRate(value) {
+  if (!Number.isFinite(value)) return "—";
+  return `${new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)}/hr`;
+}
 
 function getMonthlyHours(hoursPerWeek) {
   return hoursPerWeek * WEEKS_PER_MONTH;
@@ -23,39 +49,8 @@ function getParentHourlyRate(parentMonthlyPrice, monthlyHours) {
   return parentMonthlyPrice / monthlyHours;
 }
 
-function isValidNumber(value) {
-  return Number.isFinite(value) && value >= 0;
-}
-
-function formatCurrency(value) {
-  if (!Number.isFinite(value)) return "—";
-  const isWhole = Math.abs(value - Math.round(value)) < 0.0001;
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: isWhole ? 0 : 2,
-    maximumFractionDigits: 2
-  }).format(value);
-}
-
-function formatHourlyRate(value) {
-  if (!Number.isFinite(value)) return "—";
-  return `${new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value)}/hr`;
-}
-
-function getCalculation(hours, pay, profit) {
-  if (
-    !isValidNumber(hours) ||
-    !isValidNumber(pay) ||
-    !isValidNumber(profit) ||
-    hours <= 0 ||
-    pay <= 0
-  ) {
+function getCustomCalculation(hours, pay, profit) {
+  if (!isValidNumber(hours) || !isValidNumber(pay) || !isValidNumber(profit) || hours <= 0 || pay <= 0) {
     return null;
   }
 
@@ -71,21 +66,56 @@ function getCalculation(hours, pay, profit) {
     totalPartnerProfit,
     parentMonthlyPrice,
     parentHourlyRate,
-    profitPerPerson: profit
+    profitPerPerson: profit,
   };
+}
+
+function getGroupCalculation(students, chargePerStudent, pay, hours) {
+  if (
+    !isValidNumber(students) ||
+    !isValidNumber(chargePerStudent) ||
+    !isValidNumber(pay) ||
+    !isValidNumber(hours) ||
+    students <= 0 ||
+    hours <= 0
+  ) {
+    return null;
+  }
+
+  const monthlyHours = getMonthlyHours(hours);
+  const totalRevenue = students * chargePerStudent;
+  const tutorMonthlyCost = monthlyHours * pay;
+  const totalProfit = totalRevenue - tutorMonthlyCost;
+  const profitEach = totalProfit / PARTNER_COUNT;
+
+  return {
+    monthlyHours,
+    totalRevenue,
+    tutorMonthlyCost,
+    totalProfit,
+    profitEach,
+  };
+}
+
+function switchTab(tabName) {
+  document.querySelectorAll(".tab-btn").forEach((button) => {
+    button.classList.toggle("active", button.dataset.tab === tabName);
+  });
+
+  document.querySelectorAll(".tab-panel").forEach((panel) => {
+    panel.classList.toggle("active", panel.id === `tab-${tabName}`);
+  });
 }
 
 function updateQuickQuote() {
   const hours = parseFloat(document.getElementById("qq-hours").value);
   const pay = parseFloat(document.getElementById("qq-pay").value);
-  const tbody = document.getElementById("qq-table");
+  const tableBody = document.getElementById("qq-table");
+  tableBody.innerHTML = "";
 
-  tbody.innerHTML = "";
-
-  presetOptions.forEach((profit) => {
-    const result = getCalculation(hours, pay, profit);
-
+  PRESET_OPTIONS.forEach((profit) => {
     const row = document.createElement("tr");
+    const result = getCustomCalculation(hours, pay, profit);
 
     if (!result) {
       row.innerHTML = `
@@ -105,7 +135,7 @@ function updateQuickQuote() {
       `;
     }
 
-    tbody.appendChild(row);
+    tableBody.appendChild(row);
   });
 }
 
@@ -114,7 +144,7 @@ function updateCustomCalculator() {
   const pay = parseFloat(document.getElementById("pay").value);
   const profit = parseFloat(document.getElementById("profit").value);
 
-  const result = getCalculation(hours, pay, profit);
+  const result = getCustomCalculation(hours, pay, profit);
 
   if (!result) {
     document.getElementById("mh").textContent = "—";
@@ -123,9 +153,7 @@ function updateCustomCalculator() {
     document.getElementById("tp").textContent = "—";
     document.getElementById("pm").textContent = "—";
     document.getElementById("hr").textContent = "—";
-    document.getElementById("formula").innerHTML = `
-      Enter valid values to see the live breakdown.
-    `;
+    document.getElementById("formula").innerHTML = "Enter valid values to see the live breakdown.";
     return;
   }
 
@@ -156,7 +184,60 @@ function syncPresetProfit() {
   updateCustomCalculator();
 }
 
+function updateGroupCalculator() {
+  const students = parseFloat(document.getElementById("group-students").value);
+  const charge = parseFloat(document.getElementById("group-charge").value);
+  const pay = parseFloat(document.getElementById("group-pay").value);
+  const hours = parseFloat(document.getElementById("group-hours").value);
+
+  const result = getGroupCalculation(students, charge, pay, hours);
+
+  const profitCard = document.getElementById("g-profit-card");
+  const abirCard = document.getElementById("g-abir-card");
+  const rahatCard = document.getElementById("g-rahat-card");
+
+  profitCard.classList.remove("negative");
+  abirCard.classList.remove("negative");
+  rahatCard.classList.remove("negative");
+
+  if (!result) {
+    document.getElementById("g-mh").textContent = "—";
+    document.getElementById("g-revenue").textContent = "—";
+    document.getElementById("g-cost").textContent = "—";
+    document.getElementById("g-profit").textContent = "—";
+    document.getElementById("g-abir").textContent = "—";
+    document.getElementById("g-rahat").textContent = "—";
+    document.getElementById("group-formula").innerHTML = "Enter valid values to see the live breakdown.";
+    return;
+  }
+
+  if (result.totalProfit < 0) {
+    profitCard.classList.add("negative");
+    abirCard.classList.add("negative");
+    rahatCard.classList.add("negative");
+  }
+
+  document.getElementById("g-mh").textContent = result.monthlyHours;
+  document.getElementById("g-revenue").textContent = formatCurrency(result.totalRevenue);
+  document.getElementById("g-cost").textContent = formatCurrency(result.tutorMonthlyCost);
+  document.getElementById("g-profit").textContent = formatCurrency(result.totalProfit);
+  document.getElementById("g-abir").textContent = formatCurrency(result.profitEach);
+  document.getElementById("g-rahat").textContent = formatCurrency(result.profitEach);
+
+  document.getElementById("group-formula").innerHTML = `
+    <strong>Monthly hours</strong> = ${hours} × ${WEEKS_PER_MONTH} = ${result.monthlyHours}<br>
+    <strong>Total revenue</strong> = ${formatCurrency(charge)} × ${students} = ${formatCurrency(result.totalRevenue)}<br>
+    <strong>Tutor monthly cost</strong> = ${result.monthlyHours} × ${formatCurrency(pay)} = ${formatCurrency(result.tutorMonthlyCost)}<br>
+    <strong>Total profit</strong> = ${formatCurrency(result.totalRevenue)} − ${formatCurrency(result.tutorMonthlyCost)} = ${formatCurrency(result.totalProfit)}<br>
+    <strong>Profit each</strong> = ${formatCurrency(result.totalProfit)} ÷ ${PARTNER_COUNT} = ${formatCurrency(result.profitEach)}
+  `;
+}
+
 function attachListeners() {
+  document.querySelectorAll(".tab-btn").forEach((button) => {
+    button.addEventListener("click", () => switchTab(button.dataset.tab));
+  });
+
   document.getElementById("qq-hours").addEventListener("input", updateQuickQuote);
   document.getElementById("qq-pay").addEventListener("input", updateQuickQuote);
 
@@ -167,8 +248,15 @@ function attachListeners() {
     updateCustomCalculator();
   });
   document.getElementById("preset-profit").addEventListener("change", syncPresetProfit);
+
+  document.getElementById("group-students").addEventListener("input", updateGroupCalculator);
+  document.getElementById("group-charge").addEventListener("input", updateGroupCalculator);
+  document.getElementById("group-pay").addEventListener("input", updateGroupCalculator);
+  document.getElementById("group-hours").addEventListener("input", updateGroupCalculator);
 }
 
 attachListeners();
 updateQuickQuote();
 updateCustomCalculator();
+updateGroupCalculator();
+switchTab("quick");
