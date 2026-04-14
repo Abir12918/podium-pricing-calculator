@@ -1,4 +1,4 @@
-const PRESET_OPTIONS = [80, 90, 100, 110, 120];
+const PRESET_OPTIONS = [80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
 const PARTNER_COUNT = 2;
 const WEEKS_PER_MONTH = 4;
 
@@ -94,6 +94,7 @@ function getGroupCalculation(students, chargePerStudent, pay, hours) {
     tutorMonthlyCost,
     totalProfit,
     profitEach,
+    chargePerStudent,
   };
 }
 
@@ -202,6 +203,7 @@ function updateGroupCalculator() {
 
   if (!result) {
     document.getElementById("g-mh").textContent = "—";
+    document.getElementById("g-tuition").textContent = "—";
     document.getElementById("g-revenue").textContent = "—";
     document.getElementById("g-cost").textContent = "—";
     document.getElementById("g-profit").textContent = "—";
@@ -218,6 +220,7 @@ function updateGroupCalculator() {
   }
 
   document.getElementById("g-mh").textContent = result.monthlyHours;
+  document.getElementById("g-tuition").textContent = formatCurrency(result.chargePerStudent);
   document.getElementById("g-revenue").textContent = formatCurrency(result.totalRevenue);
   document.getElementById("g-cost").textContent = formatCurrency(result.tutorMonthlyCost);
   document.getElementById("g-profit").textContent = formatCurrency(result.totalProfit);
@@ -226,10 +229,11 @@ function updateGroupCalculator() {
 
   document.getElementById("group-formula").innerHTML = `
     <strong>Monthly hours</strong> = ${hours} × ${WEEKS_PER_MONTH} = ${result.monthlyHours}<br>
-    <strong>Total revenue</strong> = ${formatCurrency(charge)} × ${students} = ${formatCurrency(result.totalRevenue)}<br>
+    <strong>Monthly tuition</strong> = ${formatCurrency(charge)} per student<br>
+    <strong>Monthly revenue</strong> = ${formatCurrency(charge)} × ${students} = ${formatCurrency(result.totalRevenue)}<br>
     <strong>Tutor monthly cost</strong> = ${result.monthlyHours} × ${formatCurrency(pay)} = ${formatCurrency(result.tutorMonthlyCost)}<br>
-    <strong>Total profit</strong> = ${formatCurrency(result.totalRevenue)} − ${formatCurrency(result.tutorMonthlyCost)} = ${formatCurrency(result.totalProfit)}<br>
-    <strong>Profit each</strong> = ${formatCurrency(result.totalProfit)} ÷ ${PARTNER_COUNT} = ${formatCurrency(result.profitEach)}
+    <strong>Total earnings</strong> = ${formatCurrency(result.totalRevenue)} − ${formatCurrency(result.tutorMonthlyCost)} = ${formatCurrency(result.totalProfit)}<br>
+    <strong>Each takeaway</strong> = ${formatCurrency(result.totalProfit)} ÷ ${PARTNER_COUNT} = ${formatCurrency(result.profitEach)}
   `;
 }
 

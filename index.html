@@ -48,7 +48,7 @@
             <p>Best for live calls. Compare preset profit levels instantly.</p>
           </div>
           <div class="mini-highlight">
-            <span class="mini-label">Uses preset profit targets</span>
+            <span class="mini-label">Preset quote options</span>
           </div>
         </div>
 
@@ -68,11 +68,11 @@
           <table>
             <thead>
               <tr>
-                <th>Profit Each</th>
-                <th>Total Profit</th>
-                <th>Tutor Monthly Cost</th>
-                <th>Parent Monthly Price</th>
-                <th>Parent Hourly Rate</th>
+                <th>Per-Partner Earnings</th>
+                <th>Total Earnings</th>
+                <th>Tutor Investment</th>
+                <th>Parent Investment</th>
+                <th>Hourly Investment</th>
               </tr>
             </thead>
             <tbody id="qq-table"></tbody>
@@ -89,7 +89,7 @@
             <p>Set your exact profit per person and generate a live monthly quote.</p>
           </div>
           <div class="mini-highlight blue">
-            <span class="mini-label">1-on-1 / custom pricing builder</span>
+            <span class="mini-label">Custom quote builder</span>
           </div>
         </div>
 
@@ -105,7 +105,7 @@
           </label>
 
           <label class="field">
-            <span>Preset Profit</span>
+            <span>Preset Takeaway</span>
             <select id="preset-profit">
               <option value="custom">Custom</option>
               <option value="80">$80 each</option>
@@ -117,7 +117,7 @@
           </label>
 
           <label class="field">
-            <span>Profit per Person</span>
+            <span>Per-Partner Earnings</span>
             <input id="profit" type="number" min="0" step="0.01" value="100" />
           </label>
         </div>
@@ -129,27 +129,27 @@
           </div>
 
           <div class="metric-card">
-            <div class="metric-label">Tutor Monthly Cost</div>
+            <div class="metric-label">Tutor Investment</div>
             <div class="metric-value" id="tc">—</div>
           </div>
 
           <div class="metric-card">
-            <div class="metric-label">Profit per Person</div>
+            <div class="metric-label">Per-Partner Earnings</div>
             <div class="metric-value" id="pp">—</div>
           </div>
 
           <div class="metric-card">
-            <div class="metric-label">Total Partner Profit</div>
+            <div class="metric-label">Total Earnings</div>
             <div class="metric-value" id="tp">—</div>
           </div>
 
           <div class="metric-card featured blue">
-            <div class="metric-label">Parent Monthly Price</div>
+            <div class="metric-label">Parent Investment</div>
             <div class="metric-value" id="pm">—</div>
           </div>
 
           <div class="metric-card featured yellow">
-            <div class="metric-label">Parent Hourly Rate</div>
+            <div class="metric-label">Hourly Investment</div>
             <div class="metric-value" id="hr">—</div>
           </div>
         </div>
@@ -176,7 +176,7 @@
             <p>See revenue, tutor cost, total profit, and what Abir and Rahat each make.</p>
           </div>
           <div class="mini-highlight yellow">
-            <span class="mini-label">Group session profit view</span>
+            <span class="mini-label">Group profit snapshot</span>
           </div>
         </div>
 
@@ -187,7 +187,7 @@
           </label>
 
           <label class="field">
-            <span>Monthly Charge per Student</span>
+            <span>Monthly Tuition</span>
             <input id="group-charge" type="number" min="0" step="0.01" value="450" />
           </label>
 
@@ -209,27 +209,32 @@
           </div>
 
           <div class="metric-card">
-            <div class="metric-label">Total Revenue</div>
+            <div class="metric-label">Monthly Tuition</div>
+            <div class="metric-value" id="g-tuition">—</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Monthly Revenue</div>
             <div class="metric-value" id="g-revenue">—</div>
           </div>
 
           <div class="metric-card">
-            <div class="metric-label">Tutor Monthly Cost</div>
+            <div class="metric-label">Tutor Investment</div>
             <div class="metric-value" id="g-cost">—</div>
           </div>
 
           <div class="metric-card featured blue" id="g-profit-card">
-            <div class="metric-label">Total Profit</div>
+            <div class="metric-label">Total Earnings</div>
             <div class="metric-value" id="g-profit">—</div>
           </div>
 
           <div class="metric-card featured yellow" id="g-abir-card">
-            <div class="metric-label">Abir Profit</div>
+            <div class="metric-label">Abir’s Takeaway</div>
             <div class="metric-value" id="g-abir">—</div>
           </div>
 
           <div class="metric-card featured yellow" id="g-rahat-card">
-            <div class="metric-label">Rahat Profit</div>
+            <div class="metric-label">Rahat’s Takeaway</div>
             <div class="metric-value" id="g-rahat">—</div>
           </div>
         </div>
