@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Podium Pricing Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-badge">Internal Tool</div>
+      <h1>Podium Pricing Calculator</h1>
+      <p>Fast monthly pricing quotes for parent calls.</p>
+    </header>
+
+    <main class="main-grid">
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <h2>Quick Quote</h2>
+            <p>Best for live calls. Compare preset profit options instantly.</p>
+          </div>
+        </div>
+
+        <div class="input-grid compact">
+          <label class="field">
+            <span>Hours per Week</span>
+            <input id="qq-hours" type="number" min="0" step="0.5" value="4" />
+          </label>
+
+          <label class="field">
+            <span>Tutor Pay per Hour</span>
+            <input id="qq-pay" type="number" min="0" step="0.01" value="20" />
+          </label>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Profit Each</th>
+                <th>Total Profit</th>
+                <th>Tutor Monthly Cost</th>
+                <th>Parent Monthly Price</th>
+                <th>Parent Hourly Rate</th>
+              </tr>
+            </thead>
+            <tbody id="qq-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <h2>Custom Calculator</h2>
+            <p>Build a custom quote with your exact profit target.</p>
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <label class="field">
+            <span>Hours per Week</span>
+            <input id="hours" type="number" min="0" step="0.5" value="4" />
+          </label>
+
+          <label class="field">
+            <span>Tutor Pay per Hour</span>
+            <input id="pay" type="number" min="0" step="0.01" value="20" />
+          </label>
+
+          <label class="field">
+            <span>Preset Profit</span>
+            <select id="preset-profit">
+              <option value="custom">Custom</option>
+              <option value="80">$80 each</option>
+              <option value="90">$90 each</option>
+              <option value="100">$100 each</option>
+              <option value="110">$110 each</option>
+              <option value="120">$120 each</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Profit per Person</span>
+            <input id="profit" type="number" min="0" step="0.01" value="100" />
+          </label>
+        </div>
+
+        <div class="results-grid">
+          <div class="metric-card">
+            <div class="metric-label">Monthly Hours</div>
+            <div class="metric-value" id="mh">—</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Tutor Monthly Cost</div>
+            <div class="metric-value" id="tc">—</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Profit per Person</div>
+            <div class="metric-value" id="pp">—</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Total Partner Profit</div>
+            <div class="metric-value" id="tp">—</div>
+          </div>
+
+          <div class="metric-card featured">
+            <div class="metric-label">Parent Monthly Price</div>
+            <div class="metric-value" id="pm">—</div>
+          </div>
+
+          <div class="metric-card featured secondary">
+            <div class="metric-label">Parent Hourly Rate</div>
+            <div class="metric-value" id="hr">—</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <h2>How pricing is calculated</h2>
+            <p>Simple monthly pricing logic for Rahat and Abir.</p>
+          </div>
+        </div>
+
+        <div class="formula-list">
+          <div class="formula-item">1. Monthly hours = weekly hours × 4</div>
+          <div class="formula-item">2. Tutor monthly cost = monthly hours × tutor pay per hour</div>
+          <div class="formula-item">3. Total partner profit = profit per person × 2</div>
+          <div class="formula-item">4. Parent monthly price = tutor monthly cost + total partner profit</div>
+          <div class="formula-item">5. Parent hourly rate = parent monthly price ÷ monthly hours</div>
+        </div>
+
+        <div class="live-breakdown" id="formula"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Built for Podium parent pricing calls.
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
